@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
         pathname: "/img/**",
       },
     ],
-    unoptimized: isProd,
+    unoptimized: true,
   },
 
   reactStrictMode: true,
