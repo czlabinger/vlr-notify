@@ -1,14 +1,14 @@
-export async function getGames(searchTeam: string): Promise<DateGameMap[]> {
+export async function getGames(searchTeam: string): Promise<ListElement[]> {
 
     const id: string = await getTeamId(searchTeam);
 
-    const games: DateGameMap[] = await getGamesByTeamId(id);
+    const games: ListElement[] = await getGamesByTeamId(id);
 
     return games;
 }
 
-async function getGamesByTeamId(teamId: string): Promise<DateGameMap[]> {
-    const games: DateGameMap[] = [];
+async function getGamesByTeamId(teamId: string): Promise<ListElement[]> {
+    const games: ListElement[] = [];
     await fetch('https://vlr.orlandomm.net/api/v1/teams/' + teamId)
         .then(response => {
             if (!response.ok) {
@@ -18,8 +18,7 @@ async function getGamesByTeamId(teamId: string): Promise<DateGameMap[]> {
         })
         .then((data: GetTeamResponse) => {
             data.data.upcoming.map((game: Upcoming) => {
-                const event: string = game.event.name;
-                games.push({ event, teams: [game.teams[0].name, game.teams[1].name], date: game.utc });
+                games.push({ id: game.match.id, event: { name: game.event.name, logo: game.event.logo }, teams: [game.teams[0].name, game.teams[1].name], date: game.utc });
             });
         })
         .catch(error => {
@@ -41,16 +40,13 @@ async function getTeamId(searchTeam: string): Promise<string> {
             const teamName = data.data.find((team: GetIdTeamData) =>
                 team.name.toLowerCase() === searchTeam.toLowerCase()
             );
-            console.log(teamName);
 
             if (teamName) {
                 id = teamName.id;
-                console.log(teamName.id);
             }
         })
         .catch(error => {
             console.error('Fetch error:', error);
         });
-    console.log("Team ID: " + id);
     return id;
 }

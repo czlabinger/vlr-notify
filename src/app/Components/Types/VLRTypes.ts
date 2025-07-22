@@ -19,15 +19,17 @@ interface GetTeamResponse {
     data: TeamData;
 }
 
+interface UpcomingEvent {
+    name: string;
+    logo: string;
+};
+
 interface Upcoming {
     match: {
         id: string;
         url: string;
     };
-    event: {
-        name: string;
-        logo: string;
-    };
+    event: UpcomingEvent;
     teams: [
         {
             name: string;
