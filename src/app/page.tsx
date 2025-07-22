@@ -4,6 +4,24 @@ import ClientHome from './Components/ClientHome';
 export const metadata = {
   title: "Valorant Game Schedule",
   description: "Stay up-to-date with upcoming Valorant matches and tournaments.",
+  openGraph: {
+    title: "Valorant Game Schedule",
+    description: "Stay up-to-date with upcoming Valorant matches and tournaments.",
+    url: "https://czlabinger.github.io/vlr-notify/",
+    siteName: "VLR Notify",
+    images: [
+      {
+        url: "https://czlabinger.github.io/vlr-notify/images/favicon.png",
+        width: 800,
+        height: 600,
+        alt: "Valorant Schedule Preview",
+      },
+    ],
+    type: "website",
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function HomePage() {
