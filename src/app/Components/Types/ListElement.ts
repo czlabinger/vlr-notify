@@ -1,6 +1,7 @@
 type ListElement = {
     id: string;
     event: UpcomingEvent;
-    teams: [string, string];
+    teams: [UpcomingTeam, UpcomingTeam];
     date: string;
+    url: string;
 };

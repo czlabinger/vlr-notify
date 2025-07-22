@@ -37,38 +37,51 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
   if (!isOpen) return null;
 
+  const onClearSettings = () => {
+    localStorage.removeItem('games');
+    window.location.reload();
+  };
+
   return (
     <div
-      className="
-        fixed inset-0 z-50 flex items-center justify-center
-        backdrop-blur-sm
-        bg-transparent
-      "
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
     >
       <div
         ref={modalRef}
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-md p-6 relative"
+        className="relative bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-md p-6 sm:p-8"
       >
-        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
-          Settings
-        </h2>
-
-        <button
-          onClick={onEnableNotifications}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-        >
-          Enable Notifications
-        </button>
-
+        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-white text-2xl"
           aria-label="Close settings modal"
         >
           &times;
         </button>
+
+        {/* Header */}
+        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6 text-center">
+          Settings
+        </h2>
+
+        {/* Buttons */}
+        <div className="flex flex-col gap-4">
+          <button
+            onClick={onEnableNotifications}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition"
+          >
+            Enable Notifications
+          </button>
+
+          <button
+            onClick={onClearSettings}
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition"
+          >
+            Clear Settings
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,14 +1,18 @@
 {
   "name": "vlr-notify",
   "version": "0.1.0",
+  "homepage": "https://czlabinger.github.io/vlr-notify",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "predeploy": "next build",
+    "deploy": "gh-pages -d out"
   },
   "dependencies": {
+    "luxon": "^3.7.1",
     "next": "15.4.2",
     "next-pwa": "^5.6.0",
     "react": "19.1.0",
@@ -17,11 +21,13 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/luxon": "^3.6.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.2",
+    "gh-pages": "^6.3.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
@@ -31,5 +37,6 @@
       "sharp",
       "unrs-resolver"
     ]
-  }
+  },
+  "packageManager": "pnpm@10.13.1+sha256.0f9ed48d808996ae007835fb5c4641cf9a300def2eddc9e957d9bbe4768c5f28"
 }

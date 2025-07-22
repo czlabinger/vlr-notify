@@ -24,25 +24,21 @@ interface UpcomingEvent {
     logo: string;
 };
 
+interface UpcomingTeam {
+    name: string;
+    tag: string;
+    logo: string;
+};
+
 interface Upcoming {
     match: {
         id: string;
         url: string;
     };
     event: UpcomingEvent;
-    teams: [
-        {
-            name: string;
-            tag: string;
-            logo: string;
-        },
-        {
-            name: string;
-            tag: string;
-            logo: string;
-        }];
+    teams: [UpcomingTeam, UpcomingTeam];
     utc: string;
-}
+};
 
 
 interface TeamData {
