@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import ClientHome from './Components/ClientHome';
 
 export const metadata = {
@@ -6,5 +7,21 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  return <ClientHome />;
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+      <ClientHome />
+      <footer className="mt-auto text-center py-4">
+        <span className="text-gray-600 text-sm">
+                The source code is available on{" "}
+                <Link
+                    href="https://www.github.com/czlabinger/vlr-notify"
+                    className="text-blue-600 underline"
+                    target="_blank"
+                >
+                    GitHub
+                </Link>
+            </span>
+      </footer>
+    </div>
+  );
 }

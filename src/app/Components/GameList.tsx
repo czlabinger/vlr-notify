@@ -61,6 +61,13 @@ const GameList = () => {
         setSearch("");
     };
 
+    const handleRemove = (id: string) => {
+        const updatedGames = games.filter((game) => game.id !== id);
+        setGames(updatedGames);
+        localStorage.setItem("games", JSON.stringify(updatedGames));
+    };
+
+
     const fetchDates = async (query: string, region: string) => {
         setLoading(true);
         try {
@@ -164,65 +171,73 @@ const GameList = () => {
                         <li
                             key={game.id}
                             className="flex flex-col md:flex-row md:justify-between md:items-center gap-y-2 bg-gray-50 border border-gray-200 p-4 rounded hover:bg-gray-100 transition"
-                        >
-                        <div className="flex items-center space-x-4">
-                            <Image
-                                src={game.event.logo}
-                                alt={game.event.name}
-                                width={32}
-                                height={32}
-                                className="rounded"
-                            />
-                            <div className="text-sm">
-                            <p className="font-bold text-gray-900">{game.event.name}</p>
-                            <div className="text-gray-700 text-xs flex flex-wrap items-center gap-x-3">
-                                <span className="flex items-center gap-1">
+                            >
+                            <div className="flex items-center space-x-4">
                                 <Image
-                                    src={game.teams[0].logo}
-                                    alt={game.teams[0].name}
-                                    width={16}
-                                    height={16}
-                                    className="rounded-full"
+                                    src={game.event.logo}
+                                    alt={game.event.name}
+                                    width={32}
+                                    height={32}
                                 />
-                                {game.teams[0].name}
-                                </span>
-                                <span>vs</span>
-                                <span className="flex items-center gap-1">
-                                <Image
-                                    src={game.teams[1].logo}
-                                    alt={game.teams[1].name}
-                                    width={16}
-                                    height={16}
-                                    className="rounded-full"
-                                />
-                                {game.teams[1].name}
-                                </span>
-                                <span className="text-gray-500">
-                                &bull; {new Date(game.date).toLocaleTimeString("de-AT", {
-                                    timeZone: "Europe/Vienna",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    hour12: false,
-                                })}
-                                </span>
+                                <div className="text-sm">
+                                    <p className="font-bold text-gray-900">{game.event.name}</p>
+                                        <div className="text-gray-700 text-xs flex flex-wrap items-center gap-x-3">
+                                            <span className="flex items-center gap-1">
+                                                <Image
+                                                    src={game.teams[0].logo}
+                                                    alt={game.teams[0].name}
+                                                    width={16}
+                                                    height={16}
+                                                />
+                                            {game.teams[0].name}
+                                        </span>
+                                        <span>vs</span>
+                                        <span className="flex items-center gap-1">
+                                            <Image
+                                                src={game.teams[1].logo}
+                                                alt={game.teams[1].name}
+                                                width={16}
+                                                height={16}
+                                            />
+                                            {game.teams[1].name}
+                                        </span>
+                                        <span className="text-gray-500">
+                                            &bull;{" "}
+                                            {new Date(game.date).toLocaleTimeString("de-AT", {
+                                                timeZone: "Europe/Vienna",
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                                hour12: false,
+                                            })}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            </div>
-                        </div>
 
-                        <a
-                            href={game.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="ml-auto inline-flex items-center gap-1 text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition"
-                        >
-                            <Image
-                                src="https://vlr.gg/img/vlr/logo_tw.png"
-                                alt="VLR Logo"
-                                width={14}
-                                height={14}
-                            />
-                            View on VLR
-                        </a>
+                            {/* Buttons */}
+                            <div className="flex items-center gap-2 mt-2 md:mt-0">
+                                <a
+                                    href={game.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-1 text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition"
+                                >
+                                    <Image
+                                        src="https://vlr.gg/img/vlr/logo_tw.png"
+                                        alt="VLR Logo"
+                                        width={14}
+                                        height={14}
+                                    />
+                                    View on VLR
+                                </a>
+
+                                <button
+                                    onClick={() => handleRemove(game.id)}
+                                    className="text-sm text-red-600 border border-red-500 px-3 py-1 rounded hover:bg-red-100 transition"
+                                >
+                                    Remove
+                                </button>
+                            </div>
                         </li>
                     ))}
                     </ul>
