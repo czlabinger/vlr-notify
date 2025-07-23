@@ -1,7 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getGames } from "../Util/vlr";
 import Image from "next/image";
+import { GameContext } from './GameContext';
 
 const regions = {
     all: "All Regions (only top 10)",
@@ -41,8 +42,12 @@ const scheduleGameNotifications = (games: ListElement[]) => {
 const GameList = () => {
     const [search, setSearch] = useState("");
     const [region, setRegion] = useState("all");
-    const [games, setGames] = useState<ListElement[]>([]);
     const [loading, setLoading] = useState(false);
+
+    const context = useContext(GameContext);
+    if (!context) throw new Error("GameContext not found");
+
+    const [games, setGames] = [context.games, context.setGames];
 
     useEffect(() => {
         const stored = localStorage.getItem("games");

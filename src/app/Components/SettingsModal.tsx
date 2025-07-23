@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { GameContext } from './GameContext';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -15,8 +16,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
+  const context = useContext(GameContext);
+
+  if (!context) throw new Error('SettingsModal must be used within a GameProvider');
+
+  const [games, setGames] = [context.games, context.setGames];
+  const [teamChecks, setTeamChecks] = useState<Record<string, boolean>>({});
+
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+  function handleClickOutside(event: MouseEvent) {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
         onClose();
       }
@@ -40,6 +48,34 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const onClearSettings = () => {
     localStorage.removeItem('games');
     window.location.reload();
+  };
+
+  const uniqueTeams = Array.from(
+    new Map(
+      games
+        .map(game => game.teams[0])
+        .filter(team => team?.name) // optional: ignore if teams[0] is undefined
+        .map(team => [team.name, team]) // use name as key to ensure uniqueness
+    ).values()
+  );
+
+  const handleCheckboxChange = (teamName: string) => {
+    const updatedChecks = {
+      ...teamChecks,
+      [teamName]: !teamChecks[teamName],
+    };
+    setTeamChecks(updatedChecks);
+
+    // ✅ Filter games where teams[0].name is still checked
+    const allowedTeams = Object.entries(updatedChecks)
+      .filter(([, isChecked]) => isChecked)
+      .map(([name]) => name);
+
+    const filteredGames = games.filter(game =>
+      allowedTeams.includes(game.teams[0].name)
+    );
+
+    setGames(filteredGames);
   };
 
   return (
@@ -81,6 +117,29 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           >
             Clear Settings
           </button>
+        </div>
+
+        <div className="mt-6">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Selected Teams:</h2>
+        </div>
+
+        <div className="space-y-2">
+          {uniqueTeams.map((team, index) => (
+            <div key={team.name} className="flex gap-2 items-center">
+              <input
+                type="checkbox"
+                id={`team-${index}`}
+                checked
+                onChange={() => handleCheckboxChange(team.name)}
+              />
+              <label
+                htmlFor={`team-${index}`}
+                className="text-gray-800 dark:text-gray-100"
+              >
+                {team.name}
+              </label>
+            </div>
+          ))}
         </div>
       </div>
     </div>
