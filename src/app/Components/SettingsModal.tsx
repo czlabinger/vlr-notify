@@ -23,12 +23,34 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const [games, setGames] = [context.games, context.setGames];
   const [teamChecks, setTeamChecks] = useState<Record<string, boolean>>({});
 
+    const uniqueTeams = Array.from(
+    new Map(
+      games
+        .map(game => game.teams[0])
+        .filter(team => team?.name)
+        .map(team => [team.name, team])
+    ).values()
+  );
+
   useEffect(() => {
   function handleClickOutside(event: MouseEvent) {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
         onClose();
       }
     }
+
+    setTeamChecks(localStorage.getItem("gameChecks") ? JSON.parse(localStorage.getItem("gameChecks") as string) : {});
+
+    const updatedChecks = {
+      ...teamChecks,
+    };
+
+    uniqueTeams.forEach(team => {
+      if (!updatedChecks[team.name]) {
+        updatedChecks[team.name] = true;
+      }
+    });
+    setTeamChecks(updatedChecks);
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
@@ -47,26 +69,28 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
   const onClearSettings = () => {
     localStorage.removeItem('games');
+    localStorage.removeItem('gameChecks');
     window.location.reload();
   };
 
-  const uniqueTeams = Array.from(
-    new Map(
-      games
-        .map(game => game.teams[0])
-        .filter(team => team?.name) // optional: ignore if teams[0] is undefined
-        .map(team => [team.name, team]) // use name as key to ensure uniqueness
-    ).values()
-  );
-
   const handleCheckboxChange = (teamName: string) => {
+
+    if (Object.keys(teamChecks).length === 0) {
+      games.forEach(game => {
+        const checkbox: HTMLInputElement = document.getElementById(`team-${game.teams[0].tag}`) as HTMLInputElement;
+
+        if (!checkbox) return;
+
+        teamChecks[game.teams[0].name] = checkbox.checked || false;
+      });
+    }
+
     const updatedChecks = {
       ...teamChecks,
       [teamName]: !teamChecks[teamName],
     };
     setTeamChecks(updatedChecks);
 
-    // ✅ Filter games where teams[0].name is still checked
     const allowedTeams = Object.entries(updatedChecks)
       .filter(([, isChecked]) => isChecked)
       .map(([name]) => name);
@@ -76,6 +100,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     );
 
     setGames(filteredGames);
+    localStorage.setItem('games', JSON.stringify(filteredGames));
+    localStorage.setItem('gameChecks', JSON.stringify(updatedChecks));
   };
 
   return (
@@ -124,16 +150,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
 
         <div className="space-y-2">
-          {uniqueTeams.map((team, index) => (
+          {uniqueTeams.map((team) => (
             <div key={team.name} className="flex gap-2 items-center">
               <input
                 type="checkbox"
-                id={`team-${index}`}
-                checked
+                id={`team-${team.tag}`}
+                checked={teamChecks[team.name] || true}
                 onChange={() => handleCheckboxChange(team.name)}
               />
               <label
-                htmlFor={`team-${index}`}
+                htmlFor={`team-${team.tag}`}
                 className="text-gray-800 dark:text-gray-100"
               >
                 {team.name}
