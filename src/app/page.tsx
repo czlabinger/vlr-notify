@@ -21,7 +21,7 @@ export const metadata = {
   },
   icons: [
     { url: "/favicon.ico" },
-    { url: "vlr-notify/favicon.ico" },
+    { url: "/vlr-notify/favicon.ico" },
   ],
 };
 
