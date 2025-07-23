@@ -19,9 +19,10 @@ export const metadata = {
     ],
     type: "website",
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
+  icons: [
+    { url: "/favicon.ico" },
+    { url: "vlr-notify/favicon.ico" },
+  ],
 };
 
 export default function HomePage() {
