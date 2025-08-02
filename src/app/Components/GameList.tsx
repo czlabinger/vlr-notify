@@ -43,6 +43,7 @@ const GameList = () => {
     const [search, setSearch] = useState("");
     const [region, setRegion] = useState("all");
     const [loading, setLoading] = useState(false);
+    const [url, setUrl] = useState("");
 
     const context = useContext(GameContext);
     if (!context) throw new Error("GameContext not found");
@@ -58,6 +59,10 @@ const GameList = () => {
         }
 
         scheduleGameNotifications(stored ? JSON.parse(stored) : []);
+
+        if (typeof window !== "undefined") {
+            setUrl(window.location.href);
+        }
     }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -110,6 +115,21 @@ const GameList = () => {
         return Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b));
     };
 
+    const refreshGames = async () => {
+        const uniqueTeams = Array.from(
+            new Map(
+            games
+                .map(game => game.teams[0])
+                .filter(team => team?.name)
+                .map(team => [team.name, team])
+            ).values()
+        );
+
+        uniqueTeams.forEach((team: UpcomingTeam) => {
+            fetchDates(team.name, region);
+        });
+    };
+
     return (
         <div className="max-w-4xl mx-auto px-4 py-10">
             <form
@@ -144,6 +164,14 @@ const GameList = () => {
                     className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition disabled:bg-blue-300"
                 >
                 {loading ? "Loading..." : "Search"}
+                </button>
+
+                <button
+                    disabled={loading}
+                    className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition disabled:bg-blue-300"
+                    onClick={refreshGames}
+                >
+                    <Image src={url + "/images/refresh.png"} width={20} height={20} alt="Refresh Icon" />
                 </button>
             </form>
 

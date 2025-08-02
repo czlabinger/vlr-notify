@@ -1,7 +1,7 @@
 // app/ClientHome.tsx
 'use client';
 
-import { GameContext, GameProvider } from './GameContext';
+import { GameProvider } from './GameContext';
 import GameList from './GameList';
 import SettingsButton from './SettingsButton';
 
