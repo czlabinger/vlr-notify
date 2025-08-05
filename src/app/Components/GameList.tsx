@@ -52,7 +52,17 @@ const GameList = () => {
 
     useEffect(() => {
         const stored = localStorage.getItem("games");
-        if (stored) setGames(JSON.parse(stored));
+        
+        if (stored) {
+            let saved = JSON.parse(stored);
+            if (localStorage.getItem("autoRemove") === "true") {
+                const now = Date.now();
+                saved = saved.filter((game: ListElement) => new Date(game.date).getTime() > now);
+            }
+            setGames(saved);
+            localStorage.setItem("games", JSON.stringify(saved));
+        }
+
 
         if (Notification.permission !== "granted") {
             Notification.requestPermission();
@@ -63,7 +73,7 @@ const GameList = () => {
         if (typeof window !== "undefined") {
             setUrl(window.location.href);
         }
-    }, []);
+    }, [setGames]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -170,6 +180,7 @@ const GameList = () => {
                     disabled={loading}
                     className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition disabled:bg-blue-300"
                     onClick={refreshGames}
+                    title='Fetch new games'
                 >
                     <Image src={url + "/images/refresh.png"} width={20} height={20} alt="Refresh Icon" />
                 </button>

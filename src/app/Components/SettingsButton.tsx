@@ -25,7 +25,7 @@ const SettingsButton = () => {
             <button
                 onClick={() => setIsOpen(true)}
                 className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
-                aria-label="Open settings"
+                title='Open Settings'
             >
                 <SettingsIcon />
                 

@@ -22,8 +22,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
   const [games, setGames] = [context.games, context.setGames];
   const [teamChecks, setTeamChecks] = useState<Record<string, boolean>>({});
+  const [autoRemove, setAutoRemove] = [context.autoRemove, context.setAutoRemove]
 
-    const uniqueTeams = Array.from(
+  const uniqueTeams = Array.from(
     new Map(
       games
         .map(game => game.teams[0])
@@ -32,13 +33,26 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     ).values()
   );
 
+  const handleToggleautoHide = (value: boolean) => {
+    setAutoRemove(value);
+    localStorage.setItem('autoHide', value.toString());
+    if (value) {
+        const now = Date.now();
+        setGames(games.filter((game: ListElement) => new Date(game.date).getTime() > now));
+      } else {
+        setGames(games);
+      }
+    localStorage.setItem('games', JSON.stringify(games));
+  }
+
   useEffect(() => {
-  function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(event: MouseEvent) {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
         onClose();
       }
     }
 
+    setAutoRemove(localStorage.getItem("autoHide") === "true" || false);
     setTeamChecks(localStorage.getItem("gameChecks") ? JSON.parse(localStorage.getItem("gameChecks") as string) : {});
 
     const updatedChecks = {
@@ -143,6 +157,21 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           >
             Clear Settings
           </button>
+        </div>
+
+        <div className="flex gap-2 items-center">
+          <input
+            type="checkbox"
+            id='auto-remove-games'
+            checked={autoRemove}
+            onChange={() => handleToggleautoHide(!autoRemove)}
+          />
+          <label
+            htmlFor='auto-remove-games'
+            className="text-gray-800 dark:text-gray-100"
+          >
+            Remove past games
+          </label>
         </div>
 
         <div className="mt-6">
