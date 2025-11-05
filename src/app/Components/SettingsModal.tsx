@@ -35,7 +35,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
   const handleToggleautoHide = (value: boolean) => {
     setAutoRemove(value);
-    localStorage.setItem('autoHide', value.toString());
+    localStorage.setItem('autoRemove', value.toString());
     if (value) {
         const now = Date.now();
         setGames(games.filter((game: ListElement) => new Date(game.date).getTime() > now));
@@ -52,7 +52,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       }
     }
 
-    setAutoRemove(localStorage.getItem("autoHide") === "true" || false);
+    setAutoRemove(localStorage.getItem("autoRemove") === "true" || false);
     setTeamChecks(localStorage.getItem("gameChecks") ? JSON.parse(localStorage.getItem("gameChecks") as string) : {});
 
     const updatedChecks = {
@@ -184,7 +184,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               <input
                 type="checkbox"
                 id={`team-${team.tag}`}
-                checked={teamChecks[team.name] || true}
+                checked={teamChecks[team.name] ?? true}
                 onChange={() => handleCheckboxChange(team.name)}
               />
               <label

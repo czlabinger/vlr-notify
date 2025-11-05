@@ -62,12 +62,6 @@ const GameList = () => {
             setGames(saved);
             localStorage.setItem("games", JSON.stringify(saved));
         }
-
-
-        if (Notification.permission !== "granted") {
-            Notification.requestPermission();
-        }
-
         scheduleGameNotifications(stored ? JSON.parse(stored) : []);
 
         if (typeof window !== "undefined") {
@@ -177,12 +171,13 @@ const GameList = () => {
                 </button>
 
                 <button
+                    type="button"
                     disabled={loading}
                     className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition disabled:bg-blue-300"
                     onClick={refreshGames}
                     title='Fetch new games'
                 >
-                    <Image src={url + "/images/refresh.png"} width={20} height={20} alt="Refresh Icon" />
+                    <Image src="/images/refresh.png" width={20} height={20} alt="Refresh Icon" />
                 </button>
             </form>
 
