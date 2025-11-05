@@ -177,7 +177,7 @@ const GameList = () => {
                     onClick={refreshGames}
                     title='Fetch new games'
                 >
-                    <Image src="/images/refresh.png" width={20} height={20} alt="Refresh Icon" />
+                    <Image src={url + "/images/refresh.png"} width={20} height={20} alt="Refresh Icon" />
                 </button>
             </form>
 
